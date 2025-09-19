@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Registration Form</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script type="text/javascript">
+    function validate_form(event) {
+      event.preventDefault(); // stop normal form submit
+
+      if (document.emp.emp_name.value == "") {
+        alert("Please fill in the 'Your Employee Name' box.");
+        return false;
+      }
+
+      // collect form data
+      let name = document.emp.emp_name.value;
+      let aadhar = document.emp.adhar_num.value;
+      let pan = document.emp.num.value;
+      let address = document.emp.S2.value;
+      let jobLocation = document.emp.job_location.value;
+      let designation = document.emp.designation.value;
+
+      // get today's date
+      let today = new Date();
+      let offerDate = today.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric"
+      });
+
+      // generate PDF
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.setFont("times", "normal");
+      doc.setFontSize(14);
+      doc.text("OFFER LETTER", 80, 20);
+
+      doc.setFontSize(12);
+      doc.text(`Date: ${offerDate}`, 150, 30);
+
+      doc.text(`Dear ${name},`, 20, 50);
+      doc.text(`We are pleased to offer you the role of ${designation} at our ${jobLocation} office.`, 20, 65);
+      doc.text(`Your employee details are as follows:`, 20, 80);
+      doc.text(`Aadhaar: ${aadhar}`, 20, 95);
+      doc.text(`PAN: ${pan}`, 20, 105);
+      doc.text(`Address: ${address}`, 20, 115);
+
+      doc.text("We look forward to having you on our team.", 20, 155);
+      doc.text("Best Regards,", 20, 175);
+      doc.text("HR Department", 20, 185);
+
+      doc.save(`Offer_Letter_${name}.pdf`);
+      return false;
+    }
+
+  </script>
+</head>
+
+<body bgcolor="#FFFFFF">
+  <form name="emp" onsubmit="return validate_form(event);" method="post">
+    <table align="center" width=40% cellspacing="2" cellpadding="2" border="5">
+      <tr>
+        <td colspan="2" align="center"><b>Employee Registration Form</b></td>
+      </tr>
+      <tr>
+        <td>Employee Name<span style="color:red">*</span></td>
+        <td><input type="text" name="emp_name" size="24"></td>
+      </tr>
+      <tr>
+        <td>Aadhaar Number<span style="color:red">*</span></td>
+        <td><input type="text" name="adhar_num" onkeypress="return isNumberKey(event)" size="24"></td>
+      </tr>
+      <tr>
+        <td>PAN Number<span style="color:red">*</span></td>
+        <td><input type="text" name="num" size="24"></td>
+      </tr>
+      <tr>
+        <td>Address</td>
+        <td><textarea rows="4" name="S2" cols="20"></textarea></td>
+      </tr>
+      <tr>
+        <td>Job Location</td>
+        <td>
+          <select name="job_location">
+            <option value="Default">Default</option>
+            <option value="Chennai">Chennai</option>
+            <option value="Bangalore">Bangalore</option>
+            <option value="Pune">Pune</option>
+            <option value="Mysore">Mysore</option>
+            <option value="Chandigarh">Chandigarh</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>Designation</td>
+        <td>
+          <select name="designation">
+            <option value="Default">Default</option>
+            <option value="Systems Engineer">Systems Engineer</option>
+            <option value="Senior Systems Engineer">Senior Systems Engineer</option>
+            <option value="Technology Analyst">Technology Analyst</option>
+            <option value="Technology Lead">Technology Lead</option>
+            <option value="Project Manager">Project Manager</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" align="center">
+          <input type="submit" value="Submit & Download PDF">
+          <input type="reset" value="Reset All">
+        </td>
+      </tr>
+    </table>
+  </form>
+</body>
+</html>
